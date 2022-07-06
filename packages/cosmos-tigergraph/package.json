@@ -1,0 +1,17 @@
+{
+  "name": "@cosmograph/cosmos-tigegraph",
+  "version": "0.0.1-beta.0",
+  "license": "MIT",
+  "main": "./index.js",
+  "module": "./index.js",
+  "typings": "./index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "typescript": "^4.7.4"
+  },
+  "peerDependencies": {
+    "@cosmograph/cosmos": "^1.0.0"
+  }
+}
