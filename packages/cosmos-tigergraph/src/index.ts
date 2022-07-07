@@ -15,7 +15,7 @@ export class TigerGraphConnection<N extends InputNode, L extends InputLink> {
     this.token = token ?? ''
   }
 
-  public async generateToken () {
+  public async generateToken (): Promise<string> {
     return fetch(`${this.host}:9000/requesttoken`, {
       method: 'POST',
       body: `{"graph": "${this.graphname}"}`,
@@ -66,7 +66,7 @@ export class TigerGraphConnection<N extends InputNode, L extends InputLink> {
 
       const vertices = data.results[0].Seed
       const edges = data.results[1].edges
-      for (const vertex in vertices) {
+      for (const vertex of vertices) {
         nodes.push({
           id: `${vertices[vertex].v_type}_${vertices[vertex].v_id}`,
           v_id: `${vertices[vertex].v_id}`,
@@ -75,7 +75,7 @@ export class TigerGraphConnection<N extends InputNode, L extends InputLink> {
 
         })
       }
-      for (const edge in edges) {
+      for (const edge of edges) {
         links.push({
           source: `${edges[edge].from_type}_${edges[edge].from_id}`,
           target: `${edges[edge].to_type}_${edges[edge].to_id}`,
@@ -111,17 +111,20 @@ export class TigerGraphConnection<N extends InputNode, L extends InputLink> {
 
       data = data.results
 
-      for (const res in data) {
-        for (const key in data[res]) {
+      for (const res of data) {
+        for (const key of data[res]) {
           const vertices = data[res][key]
-          for (const vertex in vertices) {
+          for (const vertex of vertices) {
             if (vertices[vertex].v_type === undefined || vertices[vertex].v_id === undefined) break
-            nodes.push({ ...(vertices[vertex].attributes), ...({ id: `${vertices[vertex].v_type}_${vertices[vertex].v_id}`, v_id: `${vertices[vertex].v_id}`, v_type: `${vertices[vertex].v_type}` }) })
+            const uniqueId = `${vertices[vertex].v_type}_${vertices[vertex].v_id}`
+            const customAttributes = { id: uniqueId, v_id: `${vertices[vertex].v_id}`, v_type: `${vertices[vertex].v_type}` }
+            nodes.push({ ...(vertices[vertex].attributes), ...customAttributes })
           }
           const edges = data[res][key]
-          for (const edge in edges) {
+          for (const edge of edges) {
             if (edges[edge].from_type === undefined || edges[edge].to_type === undefined) break
-            links.push({ ...(edges[edge].attributes), ...{ source: `${edges[edge].from_type}_${edges[edge].from_id}`, target: `${edges[edge].to_type}_${edges[edge].to_id}` } })
+            const customAttributes = { source: `${edges[edge].from_type}_${edges[edge].from_id}`, target: `${edges[edge].to_type}_${edges[edge].to_id}` }
+            links.push({ ...(edges[edge].attributes), ...customAttributes })
           }
         }
       }
@@ -154,17 +157,20 @@ export class TigerGraphConnection<N extends InputNode, L extends InputLink> {
       const links: L[] = []
       const nodes: N[] = []
 
-      for (const res in data) {
-        for (const key in data[res]) {
+      for (const res of data) {
+        for (const key of data[res]) {
           const vertices = data[res][key]
-          for (const vertex in vertices) {
+          for (const vertex of vertices) {
             if (vertices[vertex].v_type === undefined || vertices[vertex].v_id === undefined) break
-            nodes.push({ ...(vertices[vertex].attributes), ...({ id: `${vertices[vertex].v_type}_${vertices[vertex].v_id}`, v_id: `${vertices[vertex].v_id}`, v_type: `${vertices[vertex].v_type}` }) })
+            const uniqueId = `${vertices[vertex].v_type}_${vertices[vertex].v_id}`
+            const customAttributes = { id: uniqueId, v_id: `${vertices[vertex].v_id}`, v_type: `${vertices[vertex].v_type}` }
+            nodes.push({ ...(vertices[vertex].attributes), ...customAttributes })
           }
           const edges = data[res][key]
-          for (const edge in edges) {
+          for (const edge of edges) {
             if (edges[edge].from_type === undefined || edges[edge].to_type === undefined) break
-            links.push({ ...(edges[edge].attributes), ...{ source: `${edges[edge].from_type}_${edges[edge].from_id}`, target: `${edges[edge].to_type}_${edges[edge].to_id}` } })
+            const customAttributes = { source: `${edges[edge].from_type}_${edges[edge].from_id}`, target: `${edges[edge].to_type}_${edges[edge].to_id}` }
+            links.push({ ...(edges[edge].attributes), ...customAttributes })
           }
         }
       }
