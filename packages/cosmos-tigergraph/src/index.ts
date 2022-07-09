@@ -15,7 +15,7 @@ export class TigerGraphConnection<N extends InputNode, L extends InputLink> {
     this.token = token ?? ''
   }
 
-  public async generateToken (): Promise<string> {
+  public generateToken (): Promise<string> {
     return fetch(`${this.host}:9000/requesttoken`, {
       method: 'POST',
       body: `{"graph": "${this.graphname}"}`,
@@ -27,7 +27,6 @@ export class TigerGraphConnection<N extends InputNode, L extends InputLink> {
       if (!response.ok) {
         throw new Error(`Error! status: ${response.status}`)
       }
-
       return response.json()
     }).then(data => {
       this.token = data.results.token
@@ -35,7 +34,7 @@ export class TigerGraphConnection<N extends InputNode, L extends InputLink> {
     })
   }
 
-  public async getTigerGraphData (vertexType: Array<string>, edgeType: Array<string>): Promise<{ nodes: N[]; links: L[] }> {
+  public getTigerGraphData (vertexType: Array<string>, edgeType: Array<string>): Promise<{ nodes: N[]; links: L[] }> {
     return fetch(`${this.host}:14240/gsqlserver/interpreted_query`, {
       method: 'POST',
       body: `INTERPRET QUERY () FOR GRAPH ${this.graphname} {
@@ -87,7 +86,7 @@ export class TigerGraphConnection<N extends InputNode, L extends InputLink> {
     })
   }
 
-  public async runInterpretedQuery (interpretedQuery: string): Promise<{ nodes: N[]; links: L[] }> {
+  public runInterpretedQuery (interpretedQuery: string): Promise<{ nodes: N[]; links: L[] }> {
     return fetch(`${this.host}:14240/gsqlserver/interpreted_query`, {
       method: 'POST',
       body: interpretedQuery,
@@ -116,28 +115,47 @@ export class TigerGraphConnection<N extends InputNode, L extends InputLink> {
           const vertices = data[res][key]
           for (const vertex of vertices) {
             if (vertices[vertex].v_type === undefined || vertices[vertex].v_id === undefined) break
+
             const uniqueId = `${vertices[vertex].v_type}_${vertices[vertex].v_id}`
-            const customAttributes = { id: uniqueId, v_id: `${vertices[vertex].v_id}`, v_type: `${vertices[vertex].v_type}` }
-            nodes.push({ ...(vertices[vertex].attributes), ...customAttributes })
+            const customAttributes = {
+              id: uniqueId,
+              v_id: `${vertices[vertex].v_id}`,
+              v_type: `${vertices[vertex].v_type}`,
+            }
+
+            nodes.push({
+              ...vertices[vertex].attributes,
+              ...customAttributes,
+            })
           }
           const edges = data[res][key]
           for (const edge of edges) {
             if (edges[edge].from_type === undefined || edges[edge].to_type === undefined) break
-            const customAttributes = { source: `${edges[edge].from_type}_${edges[edge].from_id}`, target: `${edges[edge].to_type}_${edges[edge].to_id}` }
-            links.push({ ...(edges[edge].attributes), ...customAttributes })
+
+            const customAttributes = {
+              source: `${edges[edge].from_type}_${edges[edge].from_id}`,
+              target: `${edges[edge].to_type}_${edges[edge].to_id}`,
+            }
+
+            links.push({
+              ...edges[edge].attributes,
+              ...customAttributes,
+            })
           }
         }
       }
+
       if (nodes.length === 0) {
         throw new Error('No vertices detected')
       } else if (links.length === 0) {
         throw new Error('No edges detected')
       }
+
       return { nodes, links }
     })
   }
 
-  public async runQuery (queryName: string, params?: Record<string, unknown>): Promise<{ nodes: N[]; links: L[] }> {
+  public runQuery (queryName: string, params?: Record<string, unknown>): Promise<{ nodes: N[]; links: L[] }> {
     return fetch(`${this.host}:9000/query/${this.graphname}/${queryName}`, {
       method: 'POST',
       body: params ? JSON.stringify(params) : '{}',
@@ -162,15 +180,32 @@ export class TigerGraphConnection<N extends InputNode, L extends InputLink> {
           const vertices = data[res][key]
           for (const vertex of vertices) {
             if (vertices[vertex].v_type === undefined || vertices[vertex].v_id === undefined) break
+
             const uniqueId = `${vertices[vertex].v_type}_${vertices[vertex].v_id}`
-            const customAttributes = { id: uniqueId, v_id: `${vertices[vertex].v_id}`, v_type: `${vertices[vertex].v_type}` }
-            nodes.push({ ...(vertices[vertex].attributes), ...customAttributes })
+            const customAttributes = {
+              id: uniqueId,
+              v_id: `${vertices[vertex].v_id}`,
+              v_type: `${vertices[vertex].v_type}`,
+            }
+
+            nodes.push({
+              ...vertices[vertex].attributes,
+              ...customAttributes,
+            })
           }
           const edges = data[res][key]
           for (const edge of edges) {
             if (edges[edge].from_type === undefined || edges[edge].to_type === undefined) break
-            const customAttributes = { source: `${edges[edge].from_type}_${edges[edge].from_id}`, target: `${edges[edge].to_type}_${edges[edge].to_id}` }
-            links.push({ ...(edges[edge].attributes), ...customAttributes })
+
+            const customAttributes = {
+              source: `${edges[edge].from_type}_${edges[edge].from_id}`,
+              target: `${edges[edge].to_type}_${edges[edge].to_id}`,
+            }
+
+            links.push({
+              ...edges[edge].attributes,
+              ...customAttributes,
+            })
           }
         }
       }
@@ -183,7 +218,7 @@ export class TigerGraphConnection<N extends InputNode, L extends InputLink> {
     })
   }
 
-  public async runInstalledQuery (queryName: string, params?: Record<string, unknown>): Promise<{ nodes: N[]; links: L[] }> {
+  public runInstalledQuery (queryName: string, params?: Record<string, unknown>): Promise<{ nodes: N[]; links: L[] }> {
     if (this.token === '') {
       return this.generateToken().then(() => this.runQuery(queryName, params))
     } else return this.runQuery(queryName, params)

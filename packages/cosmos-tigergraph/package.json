@@ -1,10 +1,10 @@
 {
-  "name": "@cosmograph/cosmos-tigegraph",
+  "name": "@cosmograph/cosmos-tigergraph",
   "version": "0.0.1-beta.0",
   "license": "MIT",
-  "main": "./index.js",
-  "module": "./index.js",
-  "typings": "./index.d.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "typings": "./dist/index.d.ts",
   "scripts": {
     "build": "tsc"
   },
@@ -13,5 +13,9 @@
   },
   "peerDependencies": {
     "@cosmograph/cosmos": "^1.0.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   }
 }
