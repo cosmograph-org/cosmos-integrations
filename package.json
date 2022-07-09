@@ -4,7 +4,8 @@
   "license": "MIT",
   "repository": "git://github.com/cosmograph-org/cosmos-integrations.git",
   "scripts": {
-    "lint": "eslint ./packages --ext .ts,.js --ignore-path .gitignore"
+    "lint": "eslint ./packages --ext .ts,.js --ignore-path .gitignore --cache",
+    "lint:staged": "npx lint-staged"
   },
   "engines": {
     "node": ">=12.2.0",
@@ -29,11 +30,10 @@
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-unicorn": "^43.0.0",
-    "husky": "^4.3.8",
     "lint-staged": "^13.0.3",
     "pre-commit": "^1.2.2"
   },
-  "precommit": "lint-staged",
+  "pre-commit": "lint:staged",
   "lint-staged": {
     "*.{js,ts}": "eslint --quiet --cache --fix"
   }
