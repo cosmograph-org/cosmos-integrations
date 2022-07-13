@@ -4,7 +4,8 @@
   "license": "MIT",
   "repository": "git://github.com/cosmograph-org/cosmos-integrations.git",
   "scripts": {
-    "lint": "eslint ./packages --ext .ts,.js --ignore-path .gitignore"
+    "lint": "eslint ./packages --ext .ts,.js --ignore-path .gitignore --cache",
+    "lint:staged": "npx lint-staged"
   },
   "engines": {
     "node": ">=12.2.0",
@@ -13,7 +14,13 @@
   "workspaces": [
     "packages/*"
   ],
-  "keywords": ["graph", "webgl", "force", "simulation", "visualization"],
+  "keywords": [
+    "graph",
+    "webgl",
+    "force",
+    "simulation",
+    "visualization"
+  ],
   "homepage": "https://cosmograph.app",
   "author": "cosmograph-org",
   "devDependencies": {
@@ -26,9 +33,7 @@
     "lint-staged": "^13.0.3",
     "pre-commit": "^1.2.2"
   },
-  "dependencies": {
-  },
-  "precommit": "lint-staged",
+  "pre-commit": "lint:staged",
   "lint-staged": {
     "*.{js,ts}": "eslint --quiet --cache --fix"
   }

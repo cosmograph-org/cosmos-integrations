@@ -37,6 +37,8 @@
     "no-unused-expressions": "off",
     "no-multiple-empty-lines": 2,
     "no-use-before-define": "off",
+    "object-curly-newline": ["error", { "multiline": true, "minProperties": 5 }],
+    "object-property-newline": ["error", { "allowAllPropertiesOnSameLine": true }],
     "@typescript-eslint/no-use-before-define": ["error", {"variables": false}],
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": ["error"],
