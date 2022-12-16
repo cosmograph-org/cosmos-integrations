@@ -1,7 +1,7 @@
 {
   "name": "@cosmograph/cosmos-integrations",
   "description": "A monorepo for various Cosmos integrations",
-  "license": "MIT",
+  "license": "CC-BY-NC-4.0",
   "repository": "git://github.com/cosmograph-org/cosmos-integrations.git",
   "scripts": {
     "lint": "eslint ./packages --ext .ts,.js --ignore-path .gitignore --cache",

@@ -1,7 +1,7 @@
 {
   "name": "@cosmograph/cosmos-tigergraph",
-  "version": "0.0.1-beta.0",
-  "license": "MIT",
+  "version": "0.0.1",
+  "license": "CC-BY-NC-4.0",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "typings": "./dist/index.d.ts",
