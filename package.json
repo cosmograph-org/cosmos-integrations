@@ -12,7 +12,7 @@
     "npm": ">=7.0.0"
   },
   "workspaces": [
-    "packages/*"
+    "packages/cosmos-tigergraph"
   ],
   "keywords": [
     "graph",
